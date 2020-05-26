@@ -1,0 +1,5 @@
+github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
+github.com/northbright/filehashes v0.0.0-20200430053653-f7e48ebfd224 h1:monl9pAdjo3UF0My8kSRxJd2N5RdOdI8T29rr0eobCg=
+github.com/northbright/filehashes v0.0.0-20200430053653-f7e48ebfd224/go.mod h1:0lD5W1uM1aJj6iFEe7jqYOMVhzHwsWaWinr8Xt8BDrA=
+github.com/northbright/filehashes v0.0.0-20200526081903-1d59a4e79758 h1:pkReqM7s5lHkYVtmcYyYllbTC7ABINFIWeNBBwWlhmI=
+github.com/northbright/filehashes v0.0.0-20200526081903-1d59a4e79758/go.mod h1:+exaEihgaiLLjzfc0em/1/Xak2X8FMXhBYNZWDEpLYY=
