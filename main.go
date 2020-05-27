@@ -96,6 +96,7 @@ func main() {
 	sigint := make(chan os.Signal, 1)
 	signal.Notify(sigint, os.Interrupt)
 	totalExited := 0
+
 	for {
 		select {
 		case <-sigint:
@@ -103,7 +104,7 @@ func main() {
 			fmt.Printf("os.Interrupt received")
 			cancel()
 		case <-ctx.Done():
-			fmt.Printf("exiting...")
+			// Exit.
 			return
 		case m := <-ch:
 			switch m.Type {
