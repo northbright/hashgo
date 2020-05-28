@@ -56,6 +56,31 @@ func getHashFuncs() []crypto.Hash {
 	return hashFuncs
 }
 
+func computeTotalProgress(progresses map[string]int, m *filehashes.Message) (int, error) {
+	num := len(progresses)
+	if num == 0 {
+		return 0, fmt.Errorf("no file to hash")
+	}
+
+	if m.Type != filehashes.PROGRESS_UPDATED {
+		return 0, fmt.Errorf("not progress updated message")
+	}
+
+	// Update progress of current file.
+	file := m.Req.File
+	progress := m.Data.(int)
+	progresses[file] = progress
+
+	// Compute total progress.
+	totalProgress := 0
+	for _, p := range progresses {
+		totalProgress += p
+	}
+
+	totalProgress = int(float32(totalProgress) / float32(num*100) * 100)
+	return totalProgress, nil
+}
+
 func main() {
 	// Initialize arguments.
 	initHashFuncArgs()
@@ -88,7 +113,17 @@ func main() {
 	// Create a new manager to compute file checksums.
 	man, ch := filehashes.NewManager(concurrency, bufferSize)
 
+	var err error
+	progresses := map[string]int{}
+	totalProgress := 0
+	oldTotalProgress := 0
+
 	for _, file := range files {
+		// Initialize progress for each file.
+		progresses[file] = 0
+
+		// Create a new request for each file,
+		// start a goroutine to compute checksum of the file.
 		req := filehashes.NewRequest(file, hashFuncs, nil)
 		man.Start(ctx, req)
 	}
@@ -112,6 +147,16 @@ func main() {
 				fmt.Printf("%v: starting...\n", m.Req.File)
 			case filehashes.ERROR:
 				fmt.Printf("%v: error: %v\n", m.Req.File, m.Data.(string))
+			case filehashes.PROGRESS_UPDATED:
+				totalProgress, err = computeTotalProgress(progresses, m)
+				if err != nil {
+					fmt.Printf("compute total progress error: %v\n", err)
+				} else {
+					if totalProgress != oldTotalProgress {
+						oldTotalProgress = totalProgress
+						fmt.Printf("total progress: %d\n", totalProgress)
+					}
+				}
 			case filehashes.DONE:
 				fmt.Printf("%v: done\n", m.Req.File)
 				checksums := m.Data.(map[crypto.Hash]string)
