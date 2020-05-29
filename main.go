@@ -77,7 +77,7 @@ func computeTotalProgress(progresses map[string]int, m *filehashes.Message) (int
 		totalProgress += p
 	}
 
-	totalProgress = int(float32(totalProgress) / float32(num*100) * 100)
+	totalProgress = int(float32(totalProgress) / float32(num))
 	return totalProgress, nil
 }
 
