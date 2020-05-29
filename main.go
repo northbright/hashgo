@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"path"
 
 	"github.com/northbright/filehashes"
 )
@@ -115,6 +116,7 @@ func main() {
 
 	var err error
 	progresses := map[string]int{}
+	results := map[string]map[crypto.Hash]string{}
 	totalProgress := 0
 	oldTotalProgress := 0
 
@@ -144,9 +146,10 @@ func main() {
 		case m := <-ch:
 			switch m.Type {
 			case filehashes.STARTED:
-				fmt.Printf("%v: starting...\n", m.Req.File)
 			case filehashes.ERROR:
 				fmt.Printf("%v: error: %v\n", m.Req.File, m.Data.(string))
+				cancel()
+
 			case filehashes.PROGRESS_UPDATED:
 				totalProgress, err = computeTotalProgress(progresses, m)
 				if err != nil {
@@ -154,19 +157,26 @@ func main() {
 				} else {
 					if totalProgress != oldTotalProgress {
 						oldTotalProgress = totalProgress
-						fmt.Printf("total progress: %d\n", totalProgress)
+						fmt.Printf("total progress: %d%%\r", totalProgress)
 					}
 				}
+
 			case filehashes.DONE:
-				fmt.Printf("%v: done\n", m.Req.File)
 				checksums := m.Data.(map[crypto.Hash]string)
-				for f, checksum := range checksums {
-					fmt.Printf("%v: %v\n", f, checksum)
-				}
+				results[m.Req.File] = checksums
+
 			case filehashes.EXITED:
 				totalExited++
 				// All goroutine exited
 				if totalExited >= len(files) {
+					for file, checksums := range results {
+						fmt.Printf("\n%v\n", path.Base(file))
+						for h, checksum := range checksums {
+							fmt.Printf("%d: %s\n", h, checksum)
+						}
+						fmt.Printf("\n")
+					}
+
 					cancel()
 				}
 			}
