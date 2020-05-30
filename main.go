@@ -172,7 +172,7 @@ func main() {
 					for file, checksums := range results {
 						fmt.Printf("\n%v\n", path.Base(file))
 						for h, checksum := range checksums {
-							fmt.Printf("%d: %s\n", h, checksum)
+							fmt.Printf("%s: %s\n", getHashString(h), checksum)
 						}
 						fmt.Printf("\n")
 					}
