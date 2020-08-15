@@ -83,10 +83,21 @@ func computeTotalProgress(progresses map[string]int, m *filehashes.Message) (int
 }
 
 func main() {
-	// Initialize arguments.
+	// Initialize help arguments.
+	h := flag.Bool("h", false, "this help")
+
+	// Initialize hash arguments.
 	initHashFuncArgs()
+
 	// Parse flags.
 	flag.Parse()
+
+	// Show usage for "-h" or "--help"
+	if *h {
+		fmt.Println(usage)
+		flag.PrintDefaults()
+		return
+	}
 
 	// Get hash functions in non-flag arguments
 	files := flag.Args()
