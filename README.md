@@ -1,6 +1,7 @@
 # hashgo
 
 hashgo is a program written in [go](https://golang.org) which computes hashes of given files.
+It's based on [filehashes](https://github.com/northbright/filehashes).
 
 ## Usage
 ```
