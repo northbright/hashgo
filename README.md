@@ -18,7 +18,7 @@ hashgo [-md5 | -sha1 | -sha256 | -sha512] [File]...
     	compute SHA512 checksum
 ```
 
-## Example
+## Examples
 * If no hash algorithm is set, it computes MD5 and SHA-1 of file by default
 
   ```
