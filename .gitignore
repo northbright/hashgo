@@ -1,21 +1,47 @@
-# Ignore all
+# Ignore All
 *
-# Unignore all sub dirs
+# Unignore All Sub dirs
 !*/
+
+# Unignore Files
+# --------------------------
+
+# gitignore itself
 !.gitignore
+
+# License
 !LICENSE
+
+# Markdown
 !*.md
+
+# Text
+!*.txt
+
+# Shell
+!*.sh
+
+# Golang
 !*.go
 !go.mod
 !go.sum
+
+# Configuration
 !*.json
-!.travis.yml
-!*.pem
+!*.yml
+!*.yaml
 config.json
-# For HTML
+
+# Cert
+!*.pem
+
+# HTML
 !*.html
 !*.js
 !*.css
 !*.jpg
 !*.png
 !*.gif
+
+# PDF
+!*.pdf
